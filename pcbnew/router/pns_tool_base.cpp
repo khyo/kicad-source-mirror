@@ -32,7 +32,6 @@ using namespace std::placeholders;
 #include <macros.h>
 #include <pcbnew_id.h>
 #include <view/view_controls.h>
-#include <pcbcommon.h>
 #include <pcb_painter.h>
 #include <dialogs/dialog_pns_settings.h>
 #include <dialogs/dialog_pns_diff_pair_dimensions.h>
@@ -55,6 +54,8 @@ using namespace std::placeholders;
 #include "pns_meander_placer.h" // fixme: move settings to separate header
 #include "pns_tune_status_popup.h"
 #include "pns_topology.h"
+
+#include <view/view.h>
 
 using namespace KIGFX;
 

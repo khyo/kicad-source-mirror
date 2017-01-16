@@ -36,7 +36,6 @@
 #include <confirm.h>
 #include <pcbnew.h>
 #include <wxBasePcbFrame.h>
-#include <pcbcommon.h>
 #include <base_units.h>
 #include <board_commit.h>
 
@@ -877,7 +876,7 @@ void DIALOG_PAD_PROPERTIES::redraw()
 {
     if( m_parent->IsGalCanvasActive() )
     {
-        m_dummyPad->ViewUpdate();
+        m_parent->GetGalCanvas()->GetView()->Update( m_dummyPad );
 
         BOX2I bbox = m_dummyPad->ViewBBox();
 

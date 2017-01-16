@@ -115,6 +115,7 @@ BEGIN_EVENT_TABLE( PCB_EDIT_FRAME, PCB_BASE_FRAME )
 
     // Menu Files:
     EVT_MENU( ID_MAIN_MENUBAR, PCB_EDIT_FRAME::Process_Special_Functions )
+    EVT_MENU( ID_MENU_PCB_FLIP_VIEW, PCB_EDIT_FRAME::OnFlipPcbView )
 
     EVT_MENU( ID_APPEND_FILE, PCB_EDIT_FRAME::Files_io )
     EVT_MENU( ID_SAVE_BOARD_AS, PCB_EDIT_FRAME::Files_io )
@@ -335,7 +336,9 @@ PCB_EDIT_FRAME::PCB_EDIT_FRAME( KIWAY* aKiway, wxWindow* aParent ) :
 
     // Create GAL canvas
     EDA_DRAW_PANEL_GAL* galCanvas = new PCB_DRAW_PANEL_GAL( this, -1, wxPoint( 0, 0 ),
-                                                m_FrameSize, EDA_DRAW_PANEL_GAL::GAL_TYPE_NONE );
+                                                m_FrameSize,
+                                                GetGalDisplayOptions(),
+                                                EDA_DRAW_PANEL_GAL::GAL_TYPE_NONE );
 
     SetGalCanvas( galCanvas );
 
@@ -484,7 +487,6 @@ PCB_EDIT_FRAME::PCB_EDIT_FRAME( KIWAY* aKiway, wxWindow* aParent ) :
 
     if( !appK2S.FileExists() )
         GetMenuBar()->FindItem( ID_GEN_EXPORT_FILE_STEP )->Enable( false );
-
 }
 
 
@@ -716,7 +718,8 @@ void PCB_EDIT_FRAME::enableGALSpecificMenus()
             ID_TUNE_SINGLE_TRACK_LEN_BUTT,
             ID_TUNE_DIFF_PAIR_LEN_BUTT,
             ID_TUNE_DIFF_PAIR_SKEW_BUTT,
-            ID_MENU_DIFF_PAIR_DIMENSIONS
+            ID_MENU_DIFF_PAIR_DIMENSIONS,
+            ID_MENU_PCB_FLIP_VIEW
         };
 
         bool enbl = IsGalCanvasActive();
@@ -1130,4 +1133,13 @@ void PCB_EDIT_FRAME::OnUpdatePCBFromSch( wxCommandEvent& event )
 
         Kiway().ExpressMail( FRAME_SCH, MAIL_SCH_PCB_UPDATE_REQUEST, "", this );
     }
+}
+
+
+void PCB_EDIT_FRAME::OnFlipPcbView( wxCommandEvent& evt )
+{
+    auto view = GetGalCanvas()->GetView();
+    view->SetMirror( evt.IsChecked(), false );
+    view->RecacheAllItems();
+    Refresh();
 }
