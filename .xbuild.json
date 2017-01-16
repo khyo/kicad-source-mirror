@@ -1,0 +1,41 @@
+{
+    "defaults": {
+        "build_cmd": "make",
+        "cwd": "/home/xerous/work/kicad/kicad-source-mirror/build/debug",
+        "error_match": [
+            "FAIL:(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):",
+            "(?<file>\\S+):(?<line>\\d+):(?<col>\\d+):"
+        ],
+        "pass_name_as_arg": false,
+        "remote_arg": false,
+        "sh": false
+    },
+    "format": "1.0.0",
+    "targets": [
+        {
+            "name": "pass_testing",
+            "targets": [
+                {
+                    "name": "run_testing"
+                }
+            ]
+        },
+        {
+            "build_args": [
+                "-t",
+                "clean"
+            ],
+            "name": "clean",
+        },
+        {
+            "debug_cmd": "gdb",
+            "exec_cmd": "pcbnew/pcbnew",
+            "name": "pcbnew",
+        },
+        {
+            "debug_cmd": "gdb",
+            "exec_cmd": "eeschema/eeschema",
+            "name": "eeschema",
+        },
+    ]
+}

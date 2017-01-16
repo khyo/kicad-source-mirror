@@ -116,12 +116,13 @@ bool PGM_KICAD::OnPgmInit()
 
     KICAD_MANAGER_FRAME* frame = new KICAD_MANAGER_FRAME( NULL, wxT( "KiCad" ),
                                      wxDefaultPosition, wxDefaultSize );
+
     App().SetTopWindow( frame );
 
     Kiway.SetTop( frame );
 
 
-    frame->SetProjectFileName("debug/caddy_linux.pro");
+    frame->SetProjectFileName(App().argv[1]);
     wxCommandEvent cmd( 0, wxID_ANY );
     frame->OnLoadProject( cmd );
 
@@ -137,8 +138,8 @@ bool PGM_KICAD::OnPgmInit()
 
     }
 
-    frame->Show( true );
-    frame->Raise();
+    // frame->Show( true );
+    // frame->Raise();
 
     return true;
 }

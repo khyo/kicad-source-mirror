@@ -145,7 +145,7 @@ OPENGL_GAL::OPENGL_GAL( GAL_DISPLAY_OPTIONS& aDisplayOptions, wxWindow* aParent,
 
 OPENGL_GAL::~OPENGL_GAL()
 {
-    GL_CONTEXT_MANAGER::Get().LockCtx( glPrivContext, this );
+    // GL_CONTEXT_MANAGER::Get().LockCtx( glPrivContext, this );
 
     --instanceCounter;
     glFlush();
@@ -167,7 +167,7 @@ OPENGL_GAL::~OPENGL_GAL()
     // Are we destroying the last GAL instance?
     if( instanceCounter == 0 )
     {
-        GL_CONTEXT_MANAGER::Get().LockCtx( glMainContext, this );
+        // GL_CONTEXT_MANAGER::Get().LockCtx( glMainContext, this );
 
         if( isBitmapFontLoaded )
         {

@@ -1,0 +1,8 @@
+{
+  "active_project": "/home/xerous/work/kicad/kicad-source-mirror",
+  "format": "1.0.0",
+  "target_active": "pcbnew",
+  "target_clean": "clean",
+  "target_default": "pass_testing",
+  "target_test": "run_testing"
+}

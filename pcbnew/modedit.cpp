@@ -199,15 +199,7 @@ void FOOTPRINT_EDIT_FRAME::EditModule(const wxString& aLibName)
 
     printf("EDITMODULE\n");
 
-    if(fpid.Parse( aLibName ) < 0) {
-                 wxLogDebug(
-                     wxString::Format(
-                         wxT( "Could not parse LIB_ID string '%s'." ),
-                         GetChars( aLibName )
-                     )
-                 );
-    }
-
+    fpid.Parse( aLibName );
     try
     {
         module = loadFootprint( fpid );
@@ -220,6 +212,9 @@ void FOOTPRINT_EDIT_FRAME::EditModule(const wxString& aLibName)
 
     if( module )
     {
+        Prj().SetRString( PROJECT::PCB_LIB_NICKNAME, fpid.GetLibNickname() );
+        updateTitle();
+
         wxPoint     curspos = GetCrossHairPosition();
         SetCrossHairPosition( curspos );
         m_canvas->MoveCursorToCrossHair();
@@ -248,6 +243,43 @@ void FOOTPRINT_EDIT_FRAME::EditModule(const wxString& aLibName)
         Rotate_Module( NULL, module, 0, false );
 
         RecalculateAllTracksNetcode();
+
+        if( GetBoard() && GetBoard()->m_Modules )
+        {
+            GetBoard()->m_Modules->ClearFlags();
+
+            // if either m_Reference or m_Value are gone, reinstall them -
+            // otherwise you cannot see what you are doing on board
+            TEXTE_MODULE* ref = &GetBoard()->m_Modules->Reference();
+            TEXTE_MODULE* val = &GetBoard()->m_Modules->Value();
+
+            if( val && ref )
+            {
+                ref->SetType( TEXTE_MODULE::TEXT_is_REFERENCE );    // just in case ...
+
+                if( ref->GetLength() == 0 )
+                    ref->SetText( wxT( "Ref**" ) );
+
+                val->SetType( TEXTE_MODULE::TEXT_is_VALUE );        // just in case ...
+
+                if( val->GetLength() == 0 )
+                    val->SetText( wxT( "Val**" ) );
+            }
+        }
+
+        Zoom_Automatique( false );
+
+        {
+        EDA_3D_VIEWER* draw3DFrame = Get3DViewerFrame();
+
+        if( draw3DFrame )
+            draw3DFrame->NewDisplay();
+        }
+
+        GetScreen()->ClrModify();
+
+        updateView();
+        m_canvas->Refresh();
     }
     // auto libsearch = ;
     // baseFrame->SelectFootprint(

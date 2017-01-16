@@ -364,6 +364,7 @@ void KICAD_MANAGER_FRAME::OnRunSchLibEditor( wxCommandEvent& event )
 
     frame->Raise();
     this->Reparent(frame);
+    wxTheApp->SetTopWindow(frame);
 }
 
 
@@ -437,7 +438,8 @@ void KICAD_MANAGER_FRAME::OnRunPcbFpEditor( wxCommandEvent& event )
         frame->Iconize( false );
 
     frame->Raise();
-    this->Reparent(frame);
+    // this->Reparent(frame);
+    // wxTheApp->SetTopWindow(frame);
 }
 
 

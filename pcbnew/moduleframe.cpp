@@ -349,6 +349,12 @@ FOOTPRINT_EDIT_FRAME::~FOOTPRINT_EDIT_FRAME()
     retainLastFootprint();
 
     delete m_Layers;
+
+    // need this for pcbmodule editor to close kicad-prime on exit
+    auto window = wxTheApp->GetTopWindow();
+    if(window) {
+        window->Close(true);
+    }
 }
 
 
