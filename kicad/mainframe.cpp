@@ -339,6 +339,7 @@ void KICAD_MANAGER_FRAME::OnRunEeschema( wxCommandEvent& event )
 void KICAD_MANAGER_FRAME::OnRunSchLibEditor( wxCommandEvent& event )
 {
     KIWAY_PLAYER* frame = Kiway.Player( FRAME_SCH_LIB_EDITOR, false );
+    // LIB_EDIT_FRAME* lframe = (LIB_EDIT_FRAME*)frame;
 
     if( !frame )
     {
@@ -362,6 +363,7 @@ void KICAD_MANAGER_FRAME::OnRunSchLibEditor( wxCommandEvent& event )
         frame->Iconize( false );
 
     frame->Raise();
+    this->Reparent(frame);
 }
 
 
@@ -435,6 +437,7 @@ void KICAD_MANAGER_FRAME::OnRunPcbFpEditor( wxCommandEvent& event )
         frame->Iconize( false );
 
     frame->Raise();
+    this->Reparent(frame);
 }
 
 

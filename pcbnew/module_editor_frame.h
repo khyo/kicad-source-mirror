@@ -273,6 +273,8 @@ public:
     /// Return the current library nickname.
     const wxString GetCurrentLib() const;
 
+    void EditModule(const wxString& aLibName);
+
     // Footprint edition
     void RemoveStruct( EDA_ITEM* Item );
 

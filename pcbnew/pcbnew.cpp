@@ -130,9 +130,13 @@ static struct IFACE : public KIFACE_I
 
             break;
 
-        case FRAME_PCB_MODULE_EDITOR:
-            frame = dynamic_cast< wxWindow* >( new FOOTPRINT_EDIT_FRAME( aKiway, aParent ) );
-            break;
+        case FRAME_PCB_MODULE_EDITOR: {
+            auto editorFrame = new FOOTPRINT_EDIT_FRAME( aKiway, aParent );
+            frame = dynamic_cast< wxWindow* >( editorFrame );
+            if (wxTheApp->argc > 3) {
+                editorFrame->EditModule(wxTheApp->argv[3]);
+            }
+        } break;
 
         case FRAME_PCB_MODULE_VIEWER:
         case FRAME_PCB_MODULE_VIEWER_MODAL:

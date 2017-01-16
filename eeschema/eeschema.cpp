@@ -48,6 +48,14 @@
 #include <kiway.h>
 #include <sim/sim_plot_frame.h>
 
+
+///XEROUS
+// #include <libeditframe.h>
+// #include <class_libentry.h>
+#include <wx/app.h>
+#include <class_library.h>
+//END XEROUS
+
 // The main sheet of the project
 SCH_SHEET*  g_RootSheet = NULL;
 
@@ -89,6 +97,24 @@ static struct IFACE : public KIFACE_I
         case FRAME_SCH_LIB_EDITOR:
             {
                 LIB_EDIT_FRAME* frame = new LIB_EDIT_FRAME( aKiway, aParent );
+                if (wxTheApp->argc > 3) {
+                    auto libsearch = wxTheApp->argv[3];
+                    LIB_ALIAS* entry = frame->Prj().SchLibs()->FindLibraryAlias("S00001" /* libsearch */);
+                    if( entry == NULL )     // Should not occur
+                    {
+                        wxMessageBox(_("The symbol: ") + libsearch + _(" could not be found in libraries."));
+                        frame->Close(true);
+                        return NULL;
+                    }
+                    else
+                    {
+                        PART_LIB* library = entry->GetLib();
+                        frame->LoadComponentAndSelectLib( entry, library );
+                        frame->Show(true);
+                        frame->Zoom_Automatique(true);
+                    }
+                }
+
                 return frame;
             }
             break;

@@ -120,49 +120,21 @@ bool PGM_KICAD::OnPgmInit()
 
     Kiway.SetTop( frame );
 
-    bool prjloaded = false;    // true when the project is loaded
 
-    if( App().argc > 1 )
-        frame->SetProjectFileName( App().argv[1] );
+    frame->SetProjectFileName("debug/caddy_linux.pro");
+    wxCommandEvent cmd( 0, wxID_ANY );
+    frame->OnLoadProject( cmd );
 
-    else if( GetFileHistory().GetCount() )
-    {
-        wxString last_pro = GetFileHistory().GetHistoryFile( 0 );
-
-        if( !wxFileExists( last_pro ) )
-        {
-            GetFileHistory().RemoveFileFromHistory( 0 );
-
-            wxFileName namelessProject( wxStandardPaths::Get().GetDocumentsDir(), NAMELESS_PROJECT,
-                                        ProjectFileExtension );
-
-            frame->SetProjectFileName( namelessProject.GetFullPath() );
+    if (App().argc > 3) {
+        wxCommandEvent e(0, 12346969);
+        e.SetString(App().argv[3]);
+        if(App().argv[2][0] == 's') {
+            frame->OnRunSchLibEditor(e);
+        } else if (App().argv[2][0] == 'm') {
+            frame->OnRunPcbFpEditor(e);
         }
-        else
-        {
-            // Try to open the last opened project,
-            // if a project name is not given when starting Kicad
-            frame->SetProjectFileName( last_pro );
+    } else {
 
-            wxCommandEvent cmd( 0, wxID_FILE1 );
-
-            frame->OnFileHistory( cmd );
-            prjloaded = true;    // OnFileHistory() loads the project
-        }
-    }
-    else	 // there is no history
-    {
-        wxFileName namelessProject( wxStandardPaths::Get().GetDocumentsDir(), NAMELESS_PROJECT,
-                                    ProjectFileExtension );
-
-        frame->SetProjectFileName( namelessProject.GetFullPath() );
-    }
-
-    if( !prjloaded )
-    {
-        wxCommandEvent cmd( 0, wxID_ANY );
-
-        frame->OnLoadProject( cmd );
     }
 
     frame->Show( true );
@@ -291,4 +263,3 @@ PROJECT& Prj()
 {
     return Kiway.Prj();
 }
-

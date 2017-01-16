@@ -222,7 +222,8 @@ MODULE* PCB_BASE_FRAME::LoadModuleFromLibrary( const wxString& aLibrary,
     }
 
     LIB_ID fpid;
-
+    wxLogDebug(moduleName);
+    wxLogDebug(moduleName);
     wxCHECK_MSG( fpid.Parse( moduleName ) < 0, NULL,
                  wxString::Format( wxT( "Could not parse LIB_ID string '%s'." ),
                                    GetChars( moduleName ) ) );
@@ -458,7 +459,8 @@ wxString PCB_BASE_FRAME::SelectFootprint( EDA_DRAW_FRAME* aWindow,
     if( fpname != wxEmptyString )
         oldName = fpname;
 
-    wxLogDebug( wxT( "Footprint '%s' was selected." ), GetChars( fpname ) );
+    wxLogDebug( wxT( "Footprint '%s' was selected. %s, %s, %s" ), GetChars( fpname ),
+        GetChars( aLibraryName), GetChars(aMask), GetChars(aKeyWord));
 
     return fpname;
 }

@@ -192,6 +192,85 @@ void FOOTPRINT_EDIT_FRAME::LoadModuleFromBoard( wxCommandEvent& event )
         draw3DFrame->NewDisplay();
 }
 
+void FOOTPRINT_EDIT_FRAME::EditModule(const wxString& aLibName)
+{
+    MODULE* module = NULL;
+    LIB_ID fpid;
+
+    printf("EDITMODULE\n");
+
+    if(fpid.Parse( aLibName ) < 0) {
+                 wxLogDebug(
+                     wxString::Format(
+                         wxT( "Could not parse LIB_ID string '%s'." ),
+                         GetChars( aLibName )
+                     )
+                 );
+    }
+
+    try
+    {
+        module = loadFootprint( fpid );
+    }
+    catch( const IO_ERROR& ioe )
+    {
+        wxLogDebug( wxT( "An error occurred attemping to load footprint '%s'.\n\nError: %s" ),
+                    fpid.Format().c_str(), GetChars( ioe.What() ) );
+    }
+
+    if( module )
+    {
+        wxPoint     curspos = GetCrossHairPosition();
+        SetCrossHairPosition( curspos );
+        m_canvas->MoveCursorToCrossHair();
+
+        GetBoard()->Add( module, ADD_APPEND );
+
+        module->SetFlags( IS_NEW );
+        module->SetLink( 0 );
+
+        if( IsGalCanvasActive() )
+            module->SetPosition( wxPoint( 0, 0 ) ); // cursor in GAL may not be initialized at the moment
+        else
+            module->SetPosition( curspos );
+
+        module->SetTimeStamp( GetNewTimeStamp() );
+        GetBoard()->m_Status_Pcb = 0;
+
+        // Put it on FRONT layer,
+        // (Can be stored flipped if the lib is an archive built from a board)
+        if( module->IsFlipped() )
+            module->Flip( module->GetPosition() );
+
+        // Place it in orientation 0,
+        // even if it is not saved with orientation 0 in lib
+        // (Can happen if the lib is an archive built from a board)
+        Rotate_Module( NULL, module, 0, false );
+
+        RecalculateAllTracksNetcode();
+    }
+    // auto libsearch = ;
+    // baseFrame->SelectFootprint(
+    //     editorFrame,
+    //     _(""),
+    //     _(""),
+    //     "S00011",
+    //     editorFrame->Prj().PcbFootprintLibs()
+    // );
+    // LIB_ID fpid;
+    // fpid.Parse(libsearch);
+    // editorFrame->LoadFootprint(fpid);
+    // auto mod = editorFrame->LoadModuleFromLibrary( libsearch,
+    //     editorFrame->Prj().PcbFootprintLibs(), false );
+    // if (mod) {
+    //     // editorFrame->Set_Library(mod->Library );
+    //     editorFrame->Show( true );
+    //     editorFrame->Zoom_Automatique(true);
+    // } else {
+    //     wxMessageBox(_("The footprint: ") + libsearch + _(" could not be found in libraries."));
+    //     editorFrame->Close(true);
+    // }
+}
 
 void FOOTPRINT_EDIT_FRAME::Process_Special_Functions( wxCommandEvent& event )
 {
@@ -988,4 +1067,3 @@ void FOOTPRINT_EDIT_FRAME::SetActiveLayer( LAYER_ID aLayer )
     if( IsGalCanvasActive() )
         GetGalCanvas()->Refresh();
 }
-
