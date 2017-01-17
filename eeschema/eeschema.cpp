@@ -101,7 +101,7 @@ static struct IFACE : public KIFACE_I
                 LIB_EDIT_FRAME* frame = new LIB_EDIT_FRAME( aKiway, aParent );
                 if (wxTheApp->argc > 3) {
                     auto libsearch = wxTheApp->argv[3];
-                    LIB_ALIAS* entry = frame->Prj().SchLibs()->FindLibraryAlias("S00001" /* libsearch */);
+                    LIB_ALIAS* entry = frame->Prj().SchLibs()->FindLibraryAlias(libsearch);
                     if( entry == NULL )     // Should not occur
                     {
                         wxMessageBox(_("The symbol: ") + libsearch + _(" could not be found in libraries."));
